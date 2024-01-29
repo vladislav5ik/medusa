@@ -36,8 +36,10 @@ func Import(byteValue []byte) (parsedYaml ParsedYaml, err error) {
 func parseYaml(rawYaml RawYaml, parsedYaml *ParsedYaml, path string) {
 	for key, value := range rawYaml {
 		// Handle nil values in the yaml data
+		flagNil := false
 		if value == nil {
 			value = ""
+			flagNil = true
 		}
 
 		// Check if the given object is of the same type as the RawYaml data type
@@ -53,6 +55,9 @@ func parseYaml(rawYaml RawYaml, parsedYaml *ParsedYaml, path string) {
 			}
 
 			// Append the value to the parsed data structure using it's absolute path
+			if flagNil {
+				value = nil
+			}
 			(*parsedYaml)[path][fmt.Sprintf("%v", key)] = value
 		}
 	}
